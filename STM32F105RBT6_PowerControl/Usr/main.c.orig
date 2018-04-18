@@ -1,0 +1,89 @@
+#include "stm32f10x.h"
+#include "uart.h"
+#include "delay.h"
+#include "relay.h"
+#include "tim.h"
+#include "keyboard.h"
+#include "WatchDog.h"
+#include "DebugPrintf.h"
+
+uint32_t Ticker = 0;
+
+uint8_t CurrentKey = NO_KEY_INPUT; 					//当前按键状态标志
+uint8_t LastKey1 = NO_KEY_INPUT;   					//上一个按键状态标志
+uint8_t LastKey2 = NO_KEY_INPUT; 	 					//上上一个按键状态标志
+uint8_t g_byKeyChecked = 0;        					//按键是否改变
+uint8_t	g_CheckedKeyValue = NO_KEY_INPUT; 	//键值
+
+void KeyboardHandle(void)
+{
+	CurrentKey = CheckKey();
+	if(CurrentKey!= NO_KEY_INPUT && LastKey1 != CurrentKey && LastKey2 != CurrentKey)//消抖处理
+	{
+		g_byKeyChecked = 1;
+		g_CheckedKeyValue = CurrentKey;
+		printf("%d\n",g_CheckedKeyValue);
+	}
+	
+	LastKey2 = LastKey1;
+	LastKey1 = CurrentKey;
+}
+
+
+void TIM3_IRQHandler(void)
+{
+	uint32_t i = 0;
+	if(TIM_GetITStatus(TIM3, TIM_IT_Update) == SET)
+	{
+		TIM_ClearITPendingBit(TIM3,TIM_FLAG_Update);
+		KeyboardHandle();
+		RelayHandle();
+		Ticker++;
+		if(Ticker == 2400)
+		{
+			for(i = 0 ; i < RELAY_CHANNELS; i++)
+			{
+				RelayActive(i,50);
+			}
+			Ticker = 0;
+		}
+	}
+}
+
+uint8_t SystemInitial(void)
+{
+	SystemCoreClockUpdate();
+	Delay_Init();
+	//WatchDog_Init();
+	RelayInit();
+		#if 1
+	KeyBoardInit();
+	//DelayMs(100);
+	//Key_SenInit();
+	#endif
+	TIMER3_Init(50);
+	SysTick_Config(SystemCoreClock / 100);
+	UART_Print_Init(115200);
+
+	printf("Configure Finished!\r\n");
+	printf("SystemCoreClock: %dHz.\r\n",SystemCoreClock);
+	
+	return 0x00;
+}
+
+int main(void)
+{		
+	if(SystemInitial())
+	{
+		printf("System Initial Failed\r\n");
+	}
+	else
+	{
+		printf("System Initial Successed\r\n");
+	}
+	
+	while(1)
+	{
+		;
+	}
+}
