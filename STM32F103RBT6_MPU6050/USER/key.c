@@ -1,0 +1,212 @@
+#include "key.h"
+
+void Rough_ms(uint16_t time)												//不精确的延时
+{
+  u16 i = 0;
+  while(time--)
+  {
+    i = 12000;
+    while(i--);
+  }
+}
+
+void clicked(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
+{
+  GPIO_ResetBits(GPIOx, GPIO_Pin);
+  Rough_ms(1200);
+  GPIO_SetBits(GPIOx, GPIO_Pin);
+}
+
+int KeyBoardTest(void)
+{
+  int ContentPosition = 1;
+  Rough_ms(500);
+  while(g_abyUartRecvBuf[ContentPosition] != BIT_END)
+  {
+    Rough_ms(400);
+    switch(g_abyUartRecvBuf[ContentPosition])
+    {
+      case '1':
+      {
+        sendSPIMsg(15);
+        break;
+      }
+      case '2':
+      {
+        sendSPIMsg(14);
+        break;
+      }
+      case '3':
+      {
+        sendSPIMsg(13);
+        break;
+      }
+      case '4':
+      {
+        sendSPIMsg(9);
+        break;
+      }
+      case '5':
+      {
+        sendSPIMsg(8);
+        break;
+      }
+      case '6':
+      {
+        sendSPIMsg(10);
+        break;
+      }
+      case '7':
+      {
+        sendSPIMsg(4);
+        break;
+      }
+      case '8':
+      {
+        sendSPIMsg(5);
+        break;
+      }
+      case '9':
+      {
+        sendSPIMsg(6);
+        break;
+      }
+      case '0':
+      {
+        sendSPIMsg(1);
+        break;
+      }
+      case '#':
+      {
+        sendSPIMsg(2);
+        break;
+      }
+      case '*':
+      {
+        sendSPIMsg(0);
+        break;
+      }
+      case 'u':
+      {
+        sendSPIMsg(11);
+        break;
+      }
+      case 'd':
+      {
+        sendSPIMsg(7);
+        break;
+      }
+      case 'c':
+      {
+        sendSPIMsg(12);
+        break;
+      }
+      case 'o':
+      {
+        sendSPIMsg(3);
+        break;
+      }
+      default :
+        return 0;
+    }
+    ContentPosition++;
+  }
+  Rough_ms(2500);
+  return ContentPosition;
+}
+
+int FastKeyBoardTest(void)
+{
+  int ContentPosition = 1;
+  while(g_abyUartRecvBuf[ContentPosition] != BIT_END)
+  {
+    switch(g_abyUartRecvBuf[ContentPosition])
+    {
+      case '1':
+      {
+        sendSPIMsg(15);
+        break;
+      }
+      case '2':
+      {
+        sendSPIMsg(14);
+        break;
+      }
+      case '3':
+      {
+        sendSPIMsg(13);
+        break;
+      }
+      case '4':
+      {
+        sendSPIMsg(9);
+        break;
+      }
+      case '5':
+      {
+        sendSPIMsg(8);
+        break;
+      }
+      case '6':
+      {
+        sendSPIMsg(10);
+        break;
+      }
+      case '7':
+      {
+        sendSPIMsg(4);
+        break;
+      }
+      case '8':
+      {
+        sendSPIMsg(5);
+        break;
+      }
+      case '9':
+      {
+        sendSPIMsg(6);
+        break;
+      }
+      case '0':
+      {
+        sendSPIMsg(1);
+        break;
+      }
+      case '#':
+      {
+        sendSPIMsg(2);
+        break;
+      }
+      case '*':
+      {
+        sendSPIMsg(0);
+        break;
+      }
+      case 'u':
+      {
+        sendSPIMsg(11);
+        break;
+      }
+      case 'd':
+      {
+        sendSPIMsg(7);
+        break;
+      }
+      case 'c':
+      {
+        sendSPIMsg(12);
+        break;
+      }
+      case 'o':
+      {
+        sendSPIMsg(3);
+        break;
+      }
+      default :
+        return 0;
+    }
+    ContentPosition++;
+  }
+  return ContentPosition;
+}
+
