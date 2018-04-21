@@ -1,9 +1,8 @@
 /**
   ******************************************************************************
-  * @file    Project/STM32F10x_StdPeriph_Template/main.c 
-  * @author  MCD Application Team
-  * @version V3.5.0
-  * @date    08-April-2011
+  * @author  Kelvin Tsoi
+  * @version V1.0.0
+  * @date    08-April-2018
   * @brief   Main program body
   ******************************************************************************
   * @attention
@@ -17,13 +16,15 @@
   *
   * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
   ******************************************************************************
-  */  
+  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f10x.h"
-
 #include "usart.h"
 #include "delay.h"
+#include "usart.h"
+#include "mpu6050.h"
+#include "inv_mpu.h"
+#include "inv_mpu_dmp_motion_driver.h"
 
 #include <stdio.h>
 
@@ -35,15 +36,37 @@
   * @retval None
   */
 int main(void)
-{	
-	USART2_Init(115200);
-	
+{
+  float pitch, roll, yaw;
+  short aacx, aacy, aacz;
+  short gyrox, gyroy, gyroz;
+  short temp;
+
+  USART2_Init(115200);
+
+  delay_init();
+
+  MPU_Init();
+
+  while(mpu_dmp_init())
+  {
+    printf("MPU6050 DMP Init Error! Try again!\r\n");
+    delay_ms(200);
+  }
+
   /* Infinite loop */
   while (1)
   {
-		USART_SendData(USART2, 0x0A);
-		
-		DelayMs(1000);
+    if(mpu_dmp_get_data(&pitch, &roll, &yaw) == 0)
+    {
+      temp = MPU_Get_Temperature();
+      MPU_Get_Accelerometer(&aacx, &aacy, &aacz);
+      MPU_Get_Gyroscope(&gyrox, &gyroy, &gyroz);
+			
+			printf("[%f][%f][%f]\r\n", pitch, roll, yaw);
+			
+			delay_ms(5);
+    }
   }
 }
 
@@ -57,7 +80,7 @@ int main(void)
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
+{
   /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 

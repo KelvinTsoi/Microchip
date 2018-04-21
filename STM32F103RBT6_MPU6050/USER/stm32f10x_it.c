@@ -166,7 +166,7 @@ void EXTI1_IRQHandler(void)
   ;
 }
 
-
+#if 0
 void USART2_IRQHandler(void)
 {
   if(USART_GetITStatus(USART2, USART_IT_TC) != RESET)
@@ -174,3 +174,4 @@ void USART2_IRQHandler(void)
 		USART_ClearITPendingBit(USART2, USART_IT_TC);
   }
 }
+#endif

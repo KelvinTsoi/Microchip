@@ -29,26 +29,11 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x.h"
-#include "key.h"
-#include "TIM.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-
-#ifndef MAX_UART_RECV_BUF_LENGTH
-#define MAX_UART_RECV_BUF_LENGTH 32
-#endif
-
-#define BIT_COM 			 0													//指令位
-#define BIT_END 			'E'												//以'E'作为串口命令结束符
-#define COM_KEY 			'A'												//'A'执行按键命令
-#define COM_FAST_KEY	'B'												//'B'快速执行按键命令	
-#define ERROR 				0xFFFF											//当命令错误时发送0xFFFF
-
-extern uint16_t g_byUartRecvLength;   													//串口接收长度
-extern uint8_t g_abyUartRecvBuf[MAX_UART_RECV_BUF_LENGTH];			//串口接收缓冲区
 
 void NMI_Handler(void);
 void HardFault_Handler(void);
@@ -61,7 +46,7 @@ void PendSV_Handler(void);
 void SysTick_Handler(void);
 void EXTI0_IRQHandler(void);
 void EXTI1_IRQHandler(void);
-void USART1_IRQHandler(void);
+//void USART2_IRQHandler(void);
 
 #ifdef __cplusplus
 }
