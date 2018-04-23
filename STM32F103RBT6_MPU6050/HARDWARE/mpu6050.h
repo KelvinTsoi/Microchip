@@ -68,9 +68,6 @@
 
 #define MPU_ADDR				0X68
 
-//#define MPU_READ    0XD1
-//#define MPU_WRITE   0XD0
-
 u8 MPU_Init(void);
 u8 MPU_Write_Len(u8 addr,u8 reg,u8 len,u8 *buf);
 u8 MPU_Read_Len(u8 addr,u8 reg,u8 len,u8 *buf);

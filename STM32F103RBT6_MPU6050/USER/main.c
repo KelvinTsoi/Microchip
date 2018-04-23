@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @author  Kelvin Tsoi
-  * @version V1.0.01
+  * @version V1.0.02
   * @date    08-April-2018
   * @brief   Main program body
   ******************************************************************************
@@ -38,9 +38,6 @@
 int main(void)
 {
   float pitch, roll, yaw;
-  short aacx, aacy, aacz;
-  short gyrox, gyroy, gyroz;
-  short temp;
 
   USART2_Init(115200);
 
@@ -59,13 +56,7 @@ int main(void)
   {
     if(mpu_dmp_get_data(&pitch, &roll, &yaw) == 0)
     {
-      temp = MPU_Get_Temperature();
-      MPU_Get_Accelerometer(&aacx, &aacy, &aacz);
-      MPU_Get_Gyroscope(&gyrox, &gyroy, &gyroz);
-			
 			printf("[%f][%f][%f]\r\n", pitch, roll, yaw);
-			
-			delay_ms(5);
     }
   }
 }
