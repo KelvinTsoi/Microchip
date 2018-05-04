@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @author  Kelvin Tsoi
-  * @version V1.0.02
+  * @version V1.0.03
   * @date    08-April-2018
   * @brief   Main program body
   ******************************************************************************
@@ -38,6 +38,10 @@
 int main(void)
 {
   float pitch, roll, yaw;
+	
+	unsigned char DmaBuffer[64] = {0x00};
+	
+	int ret = 0;
 
   USART2_Init(115200);
 
@@ -56,7 +60,11 @@ int main(void)
   {
     if(mpu_dmp_get_data(&pitch, &roll, &yaw) == 0)
     {
-			printf("[%f][%f][%f]\r\n", pitch, roll, yaw);
+			//printf("[%f][%f][%f]\r\n", pitch, roll, yaw);
+			ret = Encode(LEFT_HAND_SIDE, pitch, roll, yaw, DmaBuffer);
+			
+			if(ret == 0)
+				printf("%s\r\n", DmaBuffer);
     }
   }
 }

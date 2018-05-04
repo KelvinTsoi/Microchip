@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "usart.h"
 
@@ -44,6 +45,60 @@ void USART2_Init(uint32_t BaudRate)
 	USART_Cmd(USART2, ENABLE);
 	USART_ClearFlag(USART2, USART_FLAG_TC);   
 	USART_ITConfig(USART2, USART_IT_TC, ENABLE);
+}
+
+int Encode(unsigned char direction, const float pitch, const float roll, const float yaw, unsigned char * buffer)
+{
+    char tmp_pitch[16] = {0x00};
+    char tmp_roll[16] = {0x00};
+    char tmp_yaw[16] = {0x00};
+
+    if(buffer == 0)
+    {
+        return 1;
+    }
+
+    if(pitch >= 0.000000)
+    {
+        sprintf(tmp_pitch, "[+%010f]", pitch);
+    }
+    else
+    {
+        sprintf(tmp_pitch, "[%011f]", pitch);
+    }
+
+    if(roll >= 0.000000)
+    {
+        sprintf(tmp_roll, "[+%010f]", roll);
+    }
+    else
+    {
+        sprintf(tmp_roll, "[%011f]", roll);
+    }
+
+    if(yaw >= 0.000000)
+    {
+        sprintf(tmp_yaw, "[+%010f]", yaw);
+    }
+    else
+    {
+        sprintf(tmp_yaw, "[%011f]", yaw);
+    }
+
+    if(LEFT_HAND_SIDE == direction)
+    {
+        sprintf((char *)buffer, "L%s%s%s",  tmp_pitch, tmp_roll, tmp_yaw);
+    }
+    else if(RIGHT_HAND_SIDE == direction)
+    {
+        sprintf((char *)buffer, "R%s%s%s",  tmp_pitch, tmp_roll, tmp_yaw);
+    }
+    else
+    {
+        return 2;
+    }
+
+    return 0;
 }
 
 
