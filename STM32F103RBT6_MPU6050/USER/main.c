@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @author  Kelvin Tsoi
-  * @version V1.0.03
+  * @version V1.0.04
   * @date    08-April-2018
   * @brief   Main program body
   ******************************************************************************
@@ -60,11 +60,10 @@ int main(void)
   {
     if(mpu_dmp_get_data(&pitch, &roll, &yaw) == 0)
     {
-			//printf("[%f][%f][%f]\r\n", pitch, roll, yaw);
-			ret = Encode(LEFT_HAND_SIDE, pitch, roll, yaw, DmaBuffer);
-			
-			if(ret == 0)
-				printf("%s\r\n", DmaBuffer);
+			if(!(ret = Encode(LEFT_HAND_SIDE, pitch, roll, yaw, DmaBuffer)))
+			{
+				printf("%s", DmaBuffer);
+			}
     }
   }
 }

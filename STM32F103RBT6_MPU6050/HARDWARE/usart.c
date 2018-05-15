@@ -87,11 +87,11 @@ int Encode(unsigned char direction, const float pitch, const float roll, const f
 
     if(LEFT_HAND_SIDE == direction)
     {
-        sprintf((char *)buffer, "L%s%s%s",  tmp_pitch, tmp_roll, tmp_yaw);
+        sprintf((char *)buffer, "L%s%s%sE",  tmp_pitch, tmp_roll, tmp_yaw);
     }
     else if(RIGHT_HAND_SIDE == direction)
     {
-        sprintf((char *)buffer, "R%s%s%s",  tmp_pitch, tmp_roll, tmp_yaw);
+        sprintf((char *)buffer, "R%s%s%sE",  tmp_pitch, tmp_roll, tmp_yaw);
     }
     else
     {
