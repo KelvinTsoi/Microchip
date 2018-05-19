@@ -3069,7 +3069,7 @@ u8 mpu_dmp_init(void)
 
 u8 mpu_dmp_get_data(float *pitch, float *roll, float *yaw)
 {
-  float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;
+  double q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;
   unsigned long sensor_timestamp;
   short gyro[3], accel[3], sensors;
   unsigned char more;
