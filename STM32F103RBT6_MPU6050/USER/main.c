@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @author  Kelvin Tsoi
-  * @version V1.0.05
+  * @version V1.0.06
   * @date    08-April-2018
   * @brief   Main program body
   ******************************************************************************
@@ -30,28 +30,36 @@
 
 /* Private functions ---------------------------------------------------------*/
 
+uint8_t UART1TxBuffer[MAX_UART1_TX_BUFFER_SIZE];
+
+uint8_t g_IsUartTxBusy = 0;
+
+uint32_t g_byDmaBufferCurrentTab = 0;
+
+float pitch, roll, yaw = 0;
+
 /**
   * @brief  Main program.
   * @param  None
   * @retval None
   */
 int main(void)
-{
-  float pitch, roll, yaw;
-	
-	unsigned char DmaBuffer[64] = {0x00};
-	
+{	
 	int ret = 0;
 
-  USART2_Init(115200);
+	delay_init();
+	
+	USART1_Init(115200);
 
-  delay_init();
+  if((ret=MPU_Init())!=0)
+	{
+		//printf("MPU6050 Init Error! Error code [%d]\r\n", ret);
+		assert_failed((uint8_t *)__FILE__, __LINE__);
+	}
 
-  MPU_Init();
-
-  while(mpu_dmp_init())
+  while((ret=mpu_dmp_init())!=0)
   {
-    printf("MPU6050 DMP Init Error! Try again!\r\n");
+    //printf("MPU6050 DMP Init Error! Error code [%d], Try again!\r\n");
     delay_ms(200);
   }
 
@@ -60,10 +68,8 @@ int main(void)
   {
     if(mpu_dmp_get_data(&pitch, &roll, &yaw) == 0)
     {
-			if(!(ret = Encode(LEFT_HAND_SIDE, pitch, roll, yaw, DmaBuffer)))
-			{
-				printf("%s", DmaBuffer);
-			}
+			Encode(LEFT_HAND_SIDE, pitch, roll, yaw, UART1TxBuffer);
+			SendMsg(UART1TxBuffer, sizeof(UART1TxBuffer));
     }
   }
 }

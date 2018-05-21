@@ -3,8 +3,6 @@
 
 #include "i2c.h"   												  	  
  
-#define MPU_AD0_CTRL			PAout(15)
-
 #define MPU_SELF_TESTX_REG		0X0D
 #define MPU_SELF_TESTY_REG		0X0E
 #define MPU_SELF_TESTZ_REG		0X0F

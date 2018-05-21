@@ -6,20 +6,6 @@
 u8 MPU_Init(void)
 {
   u8 res;
-  GPIO_InitTypeDef  GPIO_InitStructure;
-
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-  GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
-
-  MPU_AD0_CTRL = 0;
-
   MPU_IIC_Init();
   MPU_Write_Byte(MPU_PWR_MGMT1_REG, 0X80);
   delay_ms(100);

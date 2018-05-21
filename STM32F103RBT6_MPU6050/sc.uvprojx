@@ -371,7 +371,7 @@
             <vShortWch>1</vShortWch>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_STDPERIPH_DRIVER, STM32F10X_MD,USE_STM3210B_EVAL,INTERNAL_PULLUP</Define>
+              <Define>USE_STDPERIPH_DRIVER, STM32F10X_MD,USE_STM3210B_EVAL,INTERNAL_PULLUP,USE_FULL_ASSERT</Define>
               <Undefine></Undefine>
               <IncludePath>.\CMSIS\Startup;.\FWlib\inc;.\HARDWARE;.\HARDWARE\eMPL;.\SYSTEM\delay;.\SYSTEM\sys;.\USER;.\CMSIS</IncludePath>
             </VariousControls>

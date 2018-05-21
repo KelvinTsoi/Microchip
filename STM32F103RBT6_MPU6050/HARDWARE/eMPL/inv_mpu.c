@@ -59,8 +59,8 @@
 //    return msp430_reg_int_cb(int_param->cb, int_param->pin, int_param->lp_exit,
 //        int_param->active_low);
 //}
-#define log_i 	printf
-#define log_e  	printf
+//#define log_i 	printf
+//#define log_e  	printf
 /* labs is already defined by TI's toolchain. */
 /* fabs is for doubles. fabsf is for floats. */
 #define fabs        fabsf
@@ -80,8 +80,8 @@ static inline int reg_int_cb(struct int_param_s *int_param)
   return msp430_reg_int_cb(int_param->cb, int_param->pin, int_param->lp_exit,
                            int_param->active_low);
 }
-#define log_i       MPL_LOGI
-#define log_e       MPL_LOGE
+//#define log_i       MPL_LOGI
+//#define log_e       MPL_LOGE
 /* labs is already defined by TI's toolchain. */
 /* fabs is for doubles. fabsf is for floats. */
 #define fabs        fabsf
@@ -105,8 +105,8 @@ static inline int reg_int_cb(struct int_param_s *int_param)
   sensor_board_irq_connect(int_param->pin, int_param->cb, int_param->arg);
   return 0;
 }
-#define log_i       MPL_LOGI
-#define log_e       MPL_LOGE
+//#define log_i       MPL_LOGI
+//#define log_e       MPL_LOGE
 /* UC3 is a 32-bit processor, so abs and labs are equivalent. */
 #define labs        abs
 #define fabs(x)     (((x)>0)?(x):-(x))
@@ -748,7 +748,7 @@ int mpu_reg_dump(void)
       continue;
     if (i2c_read(st.hw->addr, ii, 1, &data))
       return -1;
-    log_i("%#5x: %#5x\r\n", ii, data);
+    //log_i("%#5x: %#5x\r\n", ii, data);
   }
   return 0;
 }
@@ -803,7 +803,7 @@ int mpu_init(void)
     return -1;
   rev = ((data[5] & 0x01) << 2) | ((data[3] & 0x01) << 1) |
         (data[1] & 0x01);
-
+		
   if (rev)
   {
     /* Congrats, these parts are better. */
@@ -813,7 +813,7 @@ int mpu_init(void)
       st.chip_cfg.accel_half = 0;
     else
     {
-      log_e("Unsupported software product rev %d.\n", rev);
+      //log_e("Unsupported software product rev %d.\n", rev);
       return -1;
     }
   }
@@ -824,13 +824,13 @@ int mpu_init(void)
     rev = data[0] & 0x0F;
     if (!rev)
     {
-      log_e("Product ID read as 0 indicates device is either "
-            "incompatible or an MPU3050.\n");
+      //log_e("Product ID read as 0 indicates device is either "
+      //      "incompatible or an MPU3050.\n");
       return -1;
     }
     else if (rev == 4)
     {
-      log_i("Half sensitivity part found.\n");
+      //log_i("Half sensitivity part found.\n");
       st.chip_cfg.accel_half = 1;
     }
     else
@@ -844,7 +844,7 @@ int mpu_init(void)
     st.chip_cfg.accel_half = 0;
   else
   {
-    log_e("Unsupported software product rev %d.\n", rev);
+    //log_e("Unsupported software product rev %d.\n", rev);
     return -1;
   }
 
@@ -904,6 +904,7 @@ int mpu_init(void)
 #endif
 
   mpu_set_sensors(0);
+	
   return 0;
 }
 
@@ -2538,7 +2539,7 @@ int setup_compass(void)
   if (akm_addr > 0x0F)
   {
     /* TODO: Handle this case in all compass-related functions. */
-    log_e("Compass not found.\n");
+    //log_e("Compass not found.\n");
     return -1;
   }
 
@@ -3069,7 +3070,7 @@ u8 mpu_dmp_init(void)
 
 u8 mpu_dmp_get_data(float *pitch, float *roll, float *yaw)
 {
-  double q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;
+  float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;
   unsigned long sensor_timestamp;
   short gyro[3], accel[3], sensors;
   unsigned char more;

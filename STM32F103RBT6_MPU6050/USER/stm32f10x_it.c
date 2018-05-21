@@ -24,6 +24,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_it.h"
 
+#include "usart.h"
+
 /** @addtogroup STM32F10x_StdPeriph_Template
   * @{
   */
@@ -153,25 +155,45 @@ void SysTick_Handler(void)
 }*/
 
 /**
-  * @}
+  * @brief  
+  * @param  None
+  * @retval None
   */
+void USART1_IRQHandler(void)
+{	
+	if(USART_GetITStatus(USART1, USART_IT_TC) != RESET)
+	{
+		USART_ClearITPendingBit(USART1,USART_IT_TC);
+		
+		DMA_ClearITPendingBit(DMA1_IT_TC4);
 
-void EXTI0_IRQHandler(void)
-{
-  ;
-}
-
-void EXTI1_IRQHandler(void)
-{
-  ;
-}
-
-#if 0
-void USART2_IRQHandler(void)
-{
-  if(USART_GetITStatus(USART2, USART_IT_TC) != RESET)
-  {   
-		USART_ClearITPendingBit(USART2, USART_IT_TC);
+		g_byDmaBufferCurrentTab = 0;
+		
+		DMA_Cmd(DMA1_Channel4,DISABLE);
+		
+		g_IsUartTxBusy = 0;
+	}
+	
+	if(USART_GetITStatus(USART1,USART_IT_RXNE) != RESET) 
+	{
+		USART_ClearITPendingBit(USART1, USART_IT_RXNE);
+    (void)USART_ReceiveData(USART1);
+  }
+	
+	/* If overrun condition occurs, clear the ORE flag a.nd recover communication */    
+  if(USART_GetFlagStatus(USART1,USART_FLAG_ORE) != RESET) 
+	{
+		USART_ClearFlag(USART1, USART_FLAG_ORE);
+    (void)USART_ReceiveData(USART1);
   }
 }
-#endif
+
+void DMA1_Channel4_IRQHandler(void)
+{
+  if(DMA_GetITStatus(DMA1_IT_TC4)) 
+	{
+    DMA_ClearITPendingBit(DMA1_IT_TC4);
+    DMA_Cmd(DMA1_Channel4, DISABLE);
+    USART_ITConfig(USART1, USART_IT_TC, ENABLE); 
+  }
+}
